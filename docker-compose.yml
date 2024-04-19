@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  # Victim service configuration
+  victim:
+    build:
+      context: ./victim
+      dockerfile: Dockerfile
+    image: victim-image
+    container_name: victim
+    deploy:
+        resources:
+            limits:
+                cpus: '0.1'
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+        my_network:
+
+  # Attacker service configuration
+  attacker:
+    build:
+      context: ./attacker
+      dockerfile: Dockerfile
+    image: attacker-image
+    container_name: attacker
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+        my_network:
+        
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 9.0.0.0/24
